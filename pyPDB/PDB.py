@@ -13,5 +13,6 @@ if __name__ == "__main__":
 
     pdb1 = pdbo.PDBOperation(sys.argv[1])
     #pdb1 = pdb1.write_new_pdb()
-    pdb1.print_coordinates()
-    print("ok")
+    # pdb1.print_coordinates()
+    for atom in pdb1.atoms:
+    	print(str(atom) + "    " + pdb1.atoms[atom])
