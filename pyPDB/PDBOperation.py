@@ -90,7 +90,7 @@ class PDBOperation:
 
 
 
-            
+                
 
     def print_coordinates(self):
         """
@@ -119,6 +119,35 @@ class PDBOperation:
             self.matroordinates[i] += translation_array
             i+=1
 
+    def rotateX(self, angle):
+        sin_t = np.sin(angle)
+        cos_t = np.cos(angle)
+        for point in self.matroordinates:
+            y = point[1]
+            z = point[2]
+            point[1] = (y * cos_t - z * sin_t)*2
+            point[2] = (z * cos_t + y * sin_t)*2
+
+    def rotateY(self, angle):
+        sin_t = np.sin(angle)
+        cos_t = np.cos(angle)
+        for point in self.matroordinates:
+            x = point[0]
+            z = point[2]
+            point[0] = (x * cos_t + z * sin_t)*2
+            point[2] = (z * cos_t - x * sin_t)*2
+
+    def rotateZ(self, angle):
+        sin_t = np.sin(angle)
+        cos_t = np.cos(angle)
+        for point in self.matroordinates:
+            x = point[0]
+            y = point[1]
+            point[0] = (x * cos_t - y * sin_t)*2
+            point[1] = (x * sin_t + y * sin_t)*2
+
+
+
     def get_min_distance_between_PDB(self, pdb):
         """
         Function which returns the minimum distance between two set of
@@ -130,6 +159,3 @@ class PDBOperation:
         """
         distance_matrix = distance.cdist(self.matroordinates, pdb.matroordinates)
         return np.amin(distance_matrix)
-
-
-
