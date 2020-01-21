@@ -64,7 +64,7 @@ class PDBOperation:
             self.matroordinates[i] = v
             i+=1
 
-    def write_new_pdb(self):
+    def write_new_pdb(self, pdbpath = None):
         """
         Thanks to Pierre Poulain for the formated string line in PDB files:
         http://cupnet.net/pdb-format/.
@@ -76,7 +76,10 @@ class PDBOperation:
         pdbpath: the path to the new pdb.
 
         """
-        f = open(self.pdb + "c", "w")
+        if pdbpath is None:
+        	pdbpath = self.pdb
+        	
+        f = open(pdbpath, "w")
         for k, v in self.coordinates.items():
             f.write("{:6s}{:5d} {:^4s}{:1s}{:3s} {:1s}{:4d}{:1s}   {:8.3f}{:8.3f}{:8.3f}{:6.2f}{:6.2f}          {:>2s}{:2s}\n"\
                 .format("ATOM", k, self.atom_type[k], " ",\
