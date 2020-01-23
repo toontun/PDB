@@ -42,8 +42,8 @@ class PDBOperation:
         self.temperature_factors = {}
         self.element_symbol = {}
         self.atom_charge = {}
-        with open(pdbpath, "r") as PDB:
-            for line in PDB:
+        with open(pdbpath, "r") as opened_pdb:
+            for line in opened_pdb:
                 line_start = line[0:6].strip()
                 if "ANISOU" not in line_start:
                     self.text = self.text + line
@@ -66,8 +66,8 @@ class PDBOperation:
         self.matroordinates = np.zeros((len(self.coordinates), 3))
         # created for optimize distance calcul.
         i = 0
-        for key, value in self.coordinates.items():
-            self.matroordinates[i] = value
+        for key in self.coordinates:
+            self.matroordinates[i] = self.coordinates[key]
             i += 1
 
     def write_new_pdb(self, pdbpath=None):
@@ -101,7 +101,7 @@ class PDBOperation:
         Simple function to print coordinates, no arguments.
         """
         for atom in self.coordinates:
-            print("{} : {}".format(atom, self.coordinates[atom]))
+            print "{} : {}".format(atom, self.coordinates[atom])
 
     def translate(self, xtranslate=0, ytranslate=0, ztranslate=0):
         """
@@ -118,13 +118,13 @@ class PDBOperation:
         """
         translation_array = np.array([xtranslate, ytranslate, ztranslate])
         i = 0
-        for key, value in self.coordinates.items():
+        for key in self.coordinates:
             self.coordinates[key] += translation_array
             self.matroordinates[i] += translation_array
             i += 1
 
 
-    def get_min_distance_between_PDB(self, pdb):
+    def get_distpdb(self, pdb):
         """
         Function which returns the minimum distance between two set of
         coordinates in PDBOperation object.
