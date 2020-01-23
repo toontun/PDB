@@ -28,6 +28,7 @@ class PDBOperation:
         """
         self.text=""
         self.pdb = pdbpath
+        self.id = {}
         self.coordinates = {}
         self.atom_type = {}
         self.res_type = {}
@@ -42,8 +43,9 @@ class PDBOperation:
                 id = line[0:6].strip()               
                 if "ANISOU" not in id:
                     self.text = self.text + line
-                if id=="ATOM":
+                if id=="ATOM" or id=="HETATM":
                     atom_number = int(line[6:11].strip())
+                    self.id[atom_number]= id
                     self.coordinates[atom_number] =\
                     np.array([float(line[30:38].strip()),
                         float(line[38:46].strip()),
@@ -82,7 +84,7 @@ class PDBOperation:
         f = open(pdbpath, "w")
         for k, v in self.coordinates.items():
             f.write("{:6s}{:5d} {:^4s}{:1s}{:3s} {:1s}{:4d}{:1s}   {:8.3f}{:8.3f}{:8.3f}{:6.2f}{:6.2f}          {:>2s}{:2s}\n"\
-                .format("ATOM", k, self.atom_type[k], " ",\
+                .format(self.id[k], k, self.atom_type[k], " ",\
                 self.res_type[k], self.chains[k], self.res_number[k], " ",\
                 v[0], v[1], v[2], self.occupency[k],\
                 self.temperature_factors[k], self.element_symbol[k], self.atom_charge[k]))
