@@ -32,8 +32,8 @@ class PDBOperation:
 
         """
 
-        # pylint: disable=too-many-instance-attributes
-        # Twelve is reasonable in this case.
+        # pylint: increase [design] max-attributes to 12.
+        # 12 is reasonable in this case.
 
         self.pdb_file = pdbpath
         self.line_start = {}
@@ -67,7 +67,7 @@ class PDBOperation:
                     self.atom_charge[atom_number] = line[78:80].strip()
 
         self.matroordinates = np.zeros((len(self.coordinates), 3))
-        # created for optimize distance calcul.
+        # created to optimize distance calcul.
         i = 0
         for key in self.coordinates:
             self.matroordinates[i] = self.coordinates[key]
