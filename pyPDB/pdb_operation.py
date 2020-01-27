@@ -11,6 +11,7 @@ another PDB and write a new pdb file.
 import numpy as np
 from scipy.spatial import distance
 
+
 class PDBOperation:
 
     """
@@ -21,16 +22,19 @@ class PDBOperation:
         """
         Init an PDBOperation object by parsing a PDB file. Just give the path
         to the PDB file of your choice. Coordinates are also stored in a numpy
-        matrix for optimization while distance is calculated. Other data are stored
-        in dictionaries to keep the right information on each atoms for further
-        manipulations.
+        matrix for optimization while distance is calculated. Other data are
+        stored in dictionaries to keep the right information on each atoms for
+        further manipulations.
 
         ARGUMENTS:
 
         pdbpath: the path to the pdb.
 
         """
-        self.text = ""
+
+        # pylint: disable=too-many-instance-attributes
+        # Twelve is reasonable in this case.
+
         self.pdb_file = pdbpath
         self.line_start = {}
         self.coordinates = {}
@@ -45,21 +49,20 @@ class PDBOperation:
         with open(pdbpath, "r") as opened_pdb:
             for line in opened_pdb:
                 line_start = line[0:6].strip()
-                if "ANISOU" not in line_start:
-                    self.text = self.text + line
-                if line_start == "ATOM" or line_start == "HETATM":
+                if line_start in ("ATOM", "HETATM"):
                     atom_number = int(line[6:11].strip())
                     self.line_start[atom_number] = line_start
                     self.coordinates[atom_number] =\
-                    np.array([float(line[30:38].strip()),
-                              float(line[38:46].strip()),
-                              float(line[46:54].strip())])
+                        np.array([float(line[30:38].strip()),
+                                  float(line[38:46].strip()),
+                                  float(line[46:54].strip())])
                     self.atom_type[atom_number] = line[12:16].strip()
                     self.res_type[atom_number] = line[17:20].strip()
                     self.chains[atom_number] = line[21:22].strip()
                     self.res_number[atom_number] = int(line[22:26].strip())
                     self.occupency[atom_number] = float(line[54:60].strip())
-                    self.temperature_factors[atom_number] = float(line[60:66].strip())
+                    self.temperature_factors[atom_number] =\
+                        float(line[60:66].strip())
                     self.element_symbol[atom_number] = line[76:78].strip()
                     self.atom_charge[atom_number] = line[78:80].strip()
 
@@ -74,8 +77,8 @@ class PDBOperation:
         """
         Thanks to Pierre Poulain for the formated string line in PDB files:
         http://cupnet.net/pdb-format/.
-        This function permits to write a new pdb file at the location of your choice.
-        If no path is given, the old PDB will be overwrite.
+        This function permits to write a new pdb file at the location of your
+        choice. If no path is given, the old PDB will be overwrite.
 
         ARGUMENTS:
 
@@ -91,9 +94,10 @@ class PDBOperation:
                 {:4d}{:1s}   {:8.3f}{:8.3f}{:8.3f}{:6.2f}\
                 {:6.2f}          {:>2s}{:2s}\n"\
                 .format(self.line_start[k], k, self.atom_type[k], " ",\
-                self.res_type[k], self.chains[k], self.res_number[k], " ",\
-                value[0], value[1], value[2], self.occupency[k],\
-                self.temperature_factors[k], self.element_symbol[k], self.atom_charge[k]))
+                        self.res_type[k], self.chains[k], self.res_number[k],
+                        " ", value[0], value[1], value[2], self.occupency[k],\
+                        self.temperature_factors[k], self.element_symbol[k],\
+                        self.atom_charge[k]))
         opened_file.close()
 
     def print_coordinates(self):
@@ -101,7 +105,7 @@ class PDBOperation:
         Simple function to print coordinates, no arguments.
         """
         for atom in self.coordinates:
-            print "{} : {}".format(atom, self.coordinates[atom])
+            print("{} : {}".format(atom, self.coordinates[atom]))
 
     def translate(self, xtranslate=0, ytranslate=0, ztranslate=0):
         """
@@ -123,7 +127,6 @@ class PDBOperation:
             self.matroordinates[i] += translation_array
             i += 1
 
-
     def get_distpdb(self, pdb):
         """
         Function which returns the minimum distance between two set of
@@ -133,5 +136,6 @@ class PDBOperation:
 
         pdb: an other PDBOperation object.
         """
-        distance_matrix = distance.cdist(self.matroordinates, pdb.matroordinates)
+        distance_matrix = distance.cdist(self.matroordinates,
+                                         pdb.matroordinates)
         return np.amin(distance_matrix)
