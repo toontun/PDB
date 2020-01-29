@@ -90,9 +90,9 @@ class PDBOperation:
 
         opened_file = open(pdbpath, "w")
         for k, value in self.coordinates.items():
-            opened_file.write("{:6s}{:5d} {:^4s}{:1s}{:3s} {:1s}\
-                {:4d}{:1s}   {:8.3f}{:8.3f}{:8.3f}{:6.2f}\
-                {:6.2f}          {:>2s}{:2s}\n"\
+            opened_file.write("{:6s}{:5d} {:^4s}{:1s}{:3s} {:1s}"\
+                "{:4d}{:1s}   {:8.3f}{:8.3f}{:8.3f}{:6.2f}"\
+                "{:6.2f}          {:>2s}{:2s}\n"\
                 .format(self.line_start[k], k, self.atom_type[k], " ",\
                         self.res_type[k], self.chains[k], self.res_number[k],
                         " ", value[0], value[1], value[2], self.occupency[k],\
