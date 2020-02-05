@@ -12,6 +12,7 @@ import numpy as np
 from scipy.spatial import distance
 
 
+
 class PDBOperation:
 
     """
@@ -139,3 +140,7 @@ class PDBOperation:
         distance_matrix = distance.cdist(self.matroordinates,
                                          pdb.matroordinates)
         return np.amin(distance_matrix)
+
+        # vector_distance_matrix = (self.matroordinates[:, np.newaxis, :] - pdb.matroordinates[np.newaxis, :, :])**2
+        # norm_matrix = np.linalg.norm(vector_distance_matrix, axis=-1)
+        # return(np.amin(norm_matrix))
