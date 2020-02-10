@@ -90,7 +90,12 @@ class PDBOperation:
             pdbpath = self.pdb_file
 
         opened_file = open(pdbpath, "w")
+        # chain = self.chains[min(self.coordinates.keys())]
         for k, value in self.coordinates.items():
+        	# old_chain = chain
+        	# chain = self.chains[k]
+        	# if(old_chain != chain):
+        	# 	opened_file.write("TER    {}".format(k))
             opened_file.write("{:6s}{:5d} {:^4s}{:1s}{:3s} {:1s}"\
                 "{:4d}{:1s}   {:8.3f}{:8.3f}{:8.3f}{:6.2f}"\
                 "{:6.2f}          {:>2s}{:2s}\n"\
