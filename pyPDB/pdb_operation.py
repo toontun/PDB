@@ -90,12 +90,15 @@ class PDBOperation:
             pdbpath = self.pdb_file
 
         opened_file = open(pdbpath, "w")
-        # chain = self.chains[min(self.coordinates.keys())]
+        old_chain = self.chains[min(self.coordinates.keys())]
+
         for k, value in self.coordinates.items():
-        	# old_chain = chain
-        	# chain = self.chains[k]
-        	# if(old_chain != chain):
-        	# 	opened_file.write("TER    {}".format(k))
+            if(old_chain != self.chains[k]):
+                opened_file.write("{:6s}{:5d} {:^4s}{:1s}{:3s} {:1s}"\
+                "{:4d}\n"\
+                .format("TER", old_atom_number+1, " ", " ",\
+                old_res_type, old_chain, old_res_number))
+
             opened_file.write("{:6s}{:5d} {:^4s}{:1s}{:3s} {:1s}"\
                 "{:4d}{:1s}   {:8.3f}{:8.3f}{:8.3f}{:6.2f}"\
                 "{:6.2f}          {:>2s}{:2s}\n"\
@@ -104,6 +107,11 @@ class PDBOperation:
                         " ", value[0], value[1], value[2], self.occupency[k],\
                         self.temperature_factors[k], self.element_symbol[k],\
                         self.atom_charge[k]))
+            old_atom_number = k
+            old_res_type = self.res_type[k]
+            old_chain = self.chains[k]
+            old_res_number = self.res_number[k]
+
         opened_file.close()
 
     def print_coordinates(self):
